@@ -7,6 +7,8 @@ PYTHON_3 = 0x030000F0
 
 class HideTabsEventListener(sublime_plugin.EventListener):
 
+    _show_tabs = {}
+
     if sys.hexversion > PYTHON_3:
         def on_new_async(self, view):
             self.toggle_tabs()
@@ -52,21 +54,15 @@ class HideTabsEventListener(sublime_plugin.EventListener):
     def _get_show_tabs(self):
         window = sublime.active_window()
 
-        if not hasattr(sublime, 'show_tabs'):
-            setattr(sublime, 'show_tabs', {})
+        if window.id() not in HideTabsEventListener._show_tabs:
+            HideTabsEventListener._show_tabs[window.id()] = False
 
-        if window.id() not in sublime.show_tabs:
-            sublime.show_tabs[window.id()] = False
-
-        return sublime.show_tabs[window.id()]
-
+        return HideTabsEventListener._show_tabs[window.id()]
     def _set_show_tabs(self, show):
         window = sublime.active_window()
 
-        if self.show_tabs and not show:
-            window.run_command('toggle_tabs')
-        elif not self.show_tabs and show:
+        if self.show_tabs != show:
             window.run_command('toggle_tabs')
 
-        sublime.show_tabs[window.id()] = show
+        HideTabsEventListener._show_tabs[window.id()] = show
     show_tabs = property(_get_show_tabs, _set_show_tabs)
