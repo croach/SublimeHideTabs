@@ -40,16 +40,16 @@ class HideTabsEventListener(sublime_plugin.EventListener):
     # Otherwise, just use the synchronous versions if this is Sublime Text 2
     else:
         def on_new(self, view):
-            self.update_tabs_visibility()
+            sublime.set_timeout(self.update_tabs_visibility, 200)
 
         def on_clone(self, view):
-            self.update_tabs_visibility()
+            sublime.set_timeout(self.update_tabs_visibility, 200)
 
         def on_activated(self, view):
-            self.update_tabs_visibility()
+            sublime.set_timeout(self.update_tabs_visibility, 200)
 
         def on_deactivated(self, view):
-            self.update_tabs_visibility()
+            sublime.set_timeout(self.update_tabs_visibility, 200)
 
     # There is no async version of on_close, so just use the regular one
     def on_close(self, view):
